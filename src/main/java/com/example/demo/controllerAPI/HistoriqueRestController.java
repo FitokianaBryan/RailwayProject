@@ -70,7 +70,7 @@ public class HistoriqueRestController {
     @GetMapping("ResultatEnchere")
     public ResponseEntity<List<ResultatEnchere>> HistoriqueVente(@RequestParam("idEnchere") int idEnchere) throws Exception
     {
-        Connection con1 = ManipDb.pgConnect("postgres","railway","xdUc1BXEMu9U6UjW8VmL");
+        Connection con1 = ManipDb.pgConnect("postgres","railway","DQqp3epOn5BfOG5n4Onx");
         try {
                 return new ResponseEntity<List<ResultatEnchere>>(new HistoriqueOffreDao().userGagnant(con1,idEnchere), HttpStatus.OK);
         }

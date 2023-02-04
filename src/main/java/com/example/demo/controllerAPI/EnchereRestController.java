@@ -31,7 +31,7 @@ public class EnchereRestController {
     @GetMapping("listeEnchere")
     public ResponseEntity<List<Enchere>> getListeEnchere() throws Exception {
         Connexion con1 = new Connexion();
-        Connection con = ManipDb.pgConnect("postgres","railway","xdUc1BXEMu9U6UjW8VmL");
+        Connection con = ManipDb.pgConnect("postgres","railway","DQqp3epOn5BfOG5n4Onx");
         try{
             List<Enchere> list = ed.getListEnchere(con);
             for(Enchere e : list)
@@ -51,7 +51,7 @@ public class EnchereRestController {
     @GetMapping("listeEnchereTerminer")
     public ResponseEntity<List<Enchere>> getListeEnchereTerminer() throws Exception {
         Connexion con1 = new Connexion();
-        Connection con = ManipDb.pgConnect("postgres","railway","xdUc1BXEMu9U6UjW8VmL");
+        Connection con = ManipDb.pgConnect("postgres","railway","DQqp3epOn5BfOG5n4Onx");
         try{
             List<Enchere> list1 = ed.getListEnchere(con);
             for(Enchere e : list1)

@@ -71,7 +71,7 @@ public class HistoriqueOffreRestController {
     @GetMapping("listeOffre")
     public ResponseEntity<List<HistoriqueOffre>> listeOffre(@RequestParam("idEnchere") int idEnchere) throws Exception
     {
-        Connection con1 = ManipDb.pgConnect("postgres","railway","xdUc1BXEMu9U6UjW8VmL");
+        Connection con1 = ManipDb.pgConnect("postgres","railway","DQqp3epOn5BfOG5n4Onx");
         try {
             return new ResponseEntity<List<HistoriqueOffre>>(new HistoriqueOffreDao().ListeOffre(con1,idEnchere), HttpStatus.OK);
         } catch (Exception e) {
