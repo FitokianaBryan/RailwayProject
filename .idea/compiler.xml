@@ -7,14 +7,16 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Spring-Project" />
-        <module name="demo" />
         <module name="Enchere-Spring" />
+        <module name="Spring" />
+        <module name="demo" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Enchere-Spring" options="-parameters" />
+      <module name="Spring" options="-parameters" />
       <module name="Spring-Project" options="-parameters" />
       <module name="demo" options="-parameters" />
     </option>

@@ -28,7 +28,7 @@ public class UtilisateurDao {
             u = new Utilisateur(idUser,nom,prenom,email,m);
         } catch (Exception e) {}
         finally {
-            // c.CloseSC();
+             c.Close();
             return u;
         }
     }
@@ -38,7 +38,7 @@ public class UtilisateurDao {
         String requete="insert into utilisateur(nom,prenom,email,mdp) values ('"+nom+"','"+prenom+"','"+email+"','"+mdp+"')";
         con = new Connexion(requete);
         con.getResultset();
-//        con.CloseRC();
+//        con.Close();
     }
 
     public float getCompteUser(int idclient,Connexion con) throws Exception {

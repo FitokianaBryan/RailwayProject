@@ -57,9 +57,15 @@ public class Connexion
 
     public void Close() {
         try {
-            getResultset().close();
-            getStatement().close();
-            getConnection().close();
+            if(this.res != null) {
+                getResultset().close();
+            }
+            if(this.stat != null) {
+                getStatement().close();
+            }
+            if(this.con != null) {
+                getConnection().close();
+            }
         }
         catch(SQLException e) { e.printStackTrace(); }
         finally {}
@@ -67,8 +73,12 @@ public class Connexion
 
     public void CloseSC() {
         try {
-            getStatement().close();
-            getConnection().close();
+            if(this.stat != null) {
+                getStatement().close();
+            }
+            if(this.con != null) {
+                getConnection().close();
+            }
         }
         catch(SQLException e) { e.printStackTrace(); }
         finally {}
@@ -76,8 +86,12 @@ public class Connexion
 
     public void CloseRC() {
         try {
-            getResultset().close();
-            getConnection().close();
+            if(this.res != null) {
+                getResultset().close();
+            }
+            if(this.con != null) {
+                getConnection().close();
+            }
         }
         catch(SQLException e) { e.printStackTrace(); }
         finally {}

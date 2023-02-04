@@ -52,7 +52,7 @@ public class TokenAdminDao {
         } catch (Exception e) {
             return null;
         }
-//        finally { con.CloseSC(); }
+        finally { con.Close(); }
     }
 
     public void deleteTokenAdmin(String token,int idAdmin){
@@ -65,7 +65,7 @@ public class TokenAdminDao {
         } catch (Exception e) {
             throw e;
         }
-//        finally { con.CloseSC(); }
+        finally { con.Close(); }
     }
 
     public int validTokenAdmin(String token) throws Exception

@@ -20,9 +20,9 @@ import java.util.List;
 @Controller
 public class AdministrateurController {
 
-    Connexion con = null;
-
-    Connection con1 = ManipDb.pgConnect("postgres","railway","xdUc1BXEMu9U6UjW8VmL");
+//    Connexion con = null;
+//
+//    Connection con1 = ManipDb.pgConnect("postgres","railway","xdUc1BXEMu9U6UjW8VmL");
 
     PrelevementEnchereDao p = new PrelevementEnchereDao();
     AdminDao a = new AdminDao();
@@ -63,43 +63,55 @@ public class AdministrateurController {
     public String backOffice(HttpServletRequest request) throws Exception {
 
         HttpSession session = request.getSession();
+        Connection con1 = ManipDb.pgConnect("postgres","railway","xdUc1BXEMu9U6UjW8VmL");
+        Connexion con = new Connexion();
+        String redirect = "";
         if(session.getAttribute("admin")!=null){
-            if(con1 == null) { con1 = ManipDb.pgConnect("postgres","railway","9EHRLZ2xGeZ0Vu7ZMuAn"); }
             List<CategorieProduit> listeCategorie = cp.getListCategorie(con1);
             request.setAttribute("chiffreAffaire",p.ChiffreAffaire(con));
             request.setAttribute("listeCategorie",listeCategorie);
-            return "backOffice";
+            redirect = "backOffice";
         }else {
-            return "/";
+            redirect = "/";
         }
+        con.Close();
+        return redirect;
     }
 
     @RequestMapping("/ListeRechargementCompte")
     public String ListeRechargementCompte(HttpServletRequest request) throws Exception{
         HttpSession session = request.getSession();
+        Connexion con = new Connexion();
+        String redirect = "";
         if(session.getAttribute("admin")!=null){
             request.setAttribute("chiffreAffaire",p.ChiffreAffaire(con));
             List<Object[]> listeRechargementCompte = a.listeRechargementCompte(con);
             request.setAttribute("listeRechargementCompte", listeRechargementCompte);
-            return "ListeRechargementCompte";
+            redirect = "ListeRechargementCompte";
         }else {
-            return "/";
+            redirect = "/";
         }
+        con.Close();
+        return redirect;
     }
 
     @RequestMapping("/Validation/{idRechargementCompte}/{idUtilisateur}/{montant}")
     public String ListeRechargementCompte(HttpServletRequest request,@PathVariable int idRechargementCompte,@PathVariable int idUtilisateur,@PathVariable float montant) throws Exception{
         HttpSession session = request.getSession();
+        Connexion con = new Connexion();
+        String redirect = "";
         if(session.getAttribute("admin")!=null){
             a.ValiderRechargementCompte(idRechargementCompte,con);
             a.setCompteUser(idUtilisateur,montant,con);
             request.setAttribute("chiffreAffaire",p.ChiffreAffaire(con));
             List<Object[]> listeRechargementCompte = a.listeRechargementCompte(con);
             request.setAttribute("listeRechargementCompte", listeRechargementCompte);
-            return "redirect:/backOffice";
+            redirect = "redirect:/backOffice";
         }else {
-            return "/";
+            redirect = "/";
         }
+        con.Close();
+        return redirect;
     }
 
     @RequestMapping("/logout")
@@ -115,15 +127,19 @@ public class AdministrateurController {
     @PostMapping("/newCategorie")
     public String newCategorie(HttpServletRequest request) throws Exception {
         String typecategorie = request.getParameter("typeCategorie");
+        Connexion con = new Connexion();
         cp.setTypeCategorie(typecategorie);
         cp.NewCategorie(con);
+        con.Close();
         return "redirect:/backOffice";
     }
 
     @PostMapping("/pourcentage")
     public String setPourcentage(HttpServletRequest request) throws Exception {
         float pourcentage = Float.parseFloat(request.getParameter("pourcentage"));
+        Connexion con = new Connexion();
         p.setPourcentage(con,pourcentage);
+        con.Close();
         return "redirect:/backOffice";
     }
 

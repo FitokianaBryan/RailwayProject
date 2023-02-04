@@ -13,12 +13,12 @@ import java.util.List;
 @Controller
 public class StatistiqueController {
 
-    Connexion con = new Connexion();
+//    Connexion con = new Connexion();
     StatistiqueDao sd = new StatistiqueDao();
     @GetMapping("/Statistique")
     public String Statistique(HttpServletRequest request) throws Exception
     {
-//        con.Resolve();
+        Connexion con = new Connexion();
         //chiffre d'affaire par annee , mois
         List<Object[]> graphe = sd.chiffreAffaireAnneeMois(con);
 
@@ -39,17 +39,17 @@ public class StatistiqueController {
         request.setAttribute("StatEnchere",StatEnchere);
         request.setAttribute("StatGraphe",StatGraphe);
         request.setAttribute("annee",2023);
-//        con.getConnection().close();
+        con.Close();
         return "Statistique";
     }
 
     @GetMapping("/graphe")
     public String RechercheStatistique(HttpServletRequest request) throws Exception
     {
-        con.Resolve();
+        Connexion con = new Connexion();
         List<Object[]> graphe = sd.chiffreAffaireAnneeMois(con);
         request.setAttribute("graphe",graphe);
-        // con.getConnection().close();
+         con.Close();
         return "Statistique";
     }
 }

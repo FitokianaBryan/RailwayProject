@@ -27,21 +27,12 @@ public class EnchereRestController {
     HistoriqueOffreDao hod = new HistoriqueOffreDao();
 
     PrelevementEnchereDao ped = new PrelevementEnchereDao();
-  Connexion con1 = new Connexion();
-    Connection con;
-    {
-        try {
-            con = ManipDb.pgConnect("postgres","railway","xdUc1BXEMu9U6UjW8VmL");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @GetMapping("listeEnchere")
-    public ResponseEntity<List<Enchere>> getListeEnchere() throws SQLException {
+    public ResponseEntity<List<Enchere>> getListeEnchere() throws Exception {
+        Connexion con1 = new Connexion();
+        Connection con = ManipDb.pgConnect("postgres","railway","xdUc1BXEMu9U6UjW8VmL");
         try{
-            con1.Resolve();
-            if(con == null) { con = ManipDb.pgConnect("postgres","railway","9EHRLZ2xGeZ0Vu7ZMuAn"); }
             List<Enchere> list = ed.getListEnchere(con);
             for(Enchere e : list)
             {
@@ -51,14 +42,17 @@ public class EnchereRestController {
         }catch(Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-//        finally { con.close(); con1.Close(); }
+        finally {
+            if(con != null) con.close();
+            con1.Close();
+        }
     }
 
     @GetMapping("listeEnchereTerminer")
     public ResponseEntity<List<Enchere>> getListeEnchereTerminer() throws Exception {
+        Connexion con1 = new Connexion();
+        Connection con = ManipDb.pgConnect("postgres","railway","xdUc1BXEMu9U6UjW8VmL");
         try{
-            con1.Resolve();
-            if(con == null) { con = ManipDb.pgConnect("postgres","railway","9EHRLZ2xGeZ0Vu7ZMuAn"); }
             List<Enchere> list1 = ed.getListEnchere(con);
             for(Enchere e : list1)
             {
@@ -69,19 +63,22 @@ public class EnchereRestController {
         }catch(Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-//        finally { con1.Close(); con.close();}
+        finally {
+            if(con != null) con.close();
+            con1.Close();
+        }
     }
 
 
     @GetMapping("ficheEnchere/{idEnchere}")
     public ResponseEntity<List<Object[]>> getFicheEnchere(@PathVariable int idEnchere){
+        Connexion con1 = new Connexion();
         try{
-            con1.Resolve();
             return new ResponseEntity<List<Object[]>>(new EnchereDao().FicheEnchere(con1,idEnchere), HttpStatus.OK);
         }catch(Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-//        finally { con1.Close(); }
+        finally { con1.Close(); }
     }
 
 
@@ -89,7 +86,7 @@ public class EnchereRestController {
     public ResponseEntity<List<Object[]>> ListeEnchereUser(@RequestHeader("token") String token){
         TokenUserDao tud = new TokenUserDao();
         TokenUser tu = new TokenUser();
-        con1.Resolve();
+        Connexion con1 = new Connexion();
         try{
             if(tud.validTokenUser(token)!=0)
             {
@@ -102,15 +99,15 @@ public class EnchereRestController {
         }catch(Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-//        finally { con1.Close(); }
+        finally { con1.Close(); }
     }
 
     @PostMapping("AjoutEnchere")
     public Response AjoutEnchere(@RequestHeader("token") String token, @RequestParam("description") String description, @RequestParam("prixminimumvente") float prixminimumvente, @RequestParam("durreenchere") int durreenchere) throws Exception {
         Response response = new Response();
         TokenUserDao tud = new TokenUserDao();
-        con1.Resolve();
         TokenUser tu;
+        Connexion con1 = new Connexion();
         if(tud.validTokenUser(token)!=0)
         {
                 tu = tud.getTokenUser(token);
@@ -137,7 +134,7 @@ public class EnchereRestController {
             response.setStatus("404");
             response.setMessage("veuillez dabord vous authentifier");
        }
-//       con1.CloseRC();
+       con1.Close();
         return response;
     }
 
@@ -146,7 +143,7 @@ public class EnchereRestController {
     public Response ProduitEnchere(@PathVariable int idEnchere,@RequestParam("idProduit") int idProduit,@RequestHeader("token") String token) throws Exception {
         Response response = new Response();
         TokenUserDao tud = new TokenUserDao();
-        con1.Resolve();
+        Connexion con1 = new Connexion();
         if(tud.validTokenUser(token)!=0)
         {
             int result = p.AjouterProduitEnchere(con1,idEnchere,idProduit);
@@ -158,7 +155,7 @@ public class EnchereRestController {
             response.setMessage("token expiré");
             response.setStatus("404");
         }
-//        con1.CloseRC();
+        con1.Close();
         return response;
     }
 
@@ -167,7 +164,7 @@ public class EnchereRestController {
     public Response AjoutPhotoEnchere(@PathVariable("idproduit") int idproduit,@RequestParam("photo") String photo,@RequestHeader("token") String token) throws Exception {
         Response response = new Response();
         TokenUserDao tud = new TokenUserDao();
-        con1.Resolve();
+        Connexion con1 = new Connexion();
         if(tud.validTokenUser(token)!=0)
         {
             p.AjouterPhotoProduit(con1,idproduit,photo);
@@ -177,7 +174,7 @@ public class EnchereRestController {
             response.setMessage("token expiré");
         }
         response.setMessage("mety");
-//        con1.CloseSC();
+        con1.Close();
         return response;
     }
 
@@ -189,13 +186,14 @@ public class EnchereRestController {
                                         @RequestParam(required = false, value="motcle") String keywords,
                                         @RequestParam(required = false, value="typecategorie") String typecategorie) throws Exception {
 
+        Connexion con1 = new Connexion();
         PreparedStatement stmt = ed.generateStatement(con1,startDate,endDate,category,auctionStatus,keywords,typecategorie);
         List<Enchere> encheres= null;
         try {
             encheres = ed.getListEnchereRecherche(stmt);
         } catch (Exception e) {
         }
-//        con1.getConnection().close();
+        con1.Close();
         return encheres;
     }
 }

@@ -22,23 +22,15 @@ import java.util.List;
 @RequestMapping("/api/HistoriqueOffre")
 @CrossOrigin
 public class HistoriqueOffreRestController {
-    Connexion con = new Connexion();
     HistoriqueOffreDao hod = new HistoriqueOffreDao();
-    Connection con1;
-    {
-        try {
-            con1 = ManipDb.pgConnect("postgres","railway","xdUc1BXEMu9U6UjW8VmL");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+
     HistoriqueOffreDao ho = new HistoriqueOffreDao();
     @PostMapping("ReEncherir/{idEnchere}")
     public Response ReEncherir(@PathVariable int idEnchere, @RequestHeader("token") String token, @RequestParam("montant") float montant_offre) throws Exception {
         Response response = new Response();
        TokenUserDao tud = new TokenUserDao();
+       Connexion con = new Connexion();
        TokenUser t;
-//       con.Resolve();
         if(tud.validTokenUser(token)!=0)
        {
            t = tud.getTokenUser(token);
@@ -72,22 +64,20 @@ public class HistoriqueOffreRestController {
         else{
             response.setMessage("veuillez dabord vous authentifier");
         }
-//        con.CloseSC();
+        con.Close();
         return response;
     }
 
     @GetMapping("listeOffre")
     public ResponseEntity<List<HistoriqueOffre>> listeOffre(@RequestParam("idEnchere") int idEnchere) throws Exception
     {
+        Connection con1 = ManipDb.pgConnect("postgres","railway","xdUc1BXEMu9U6UjW8VmL");
         try {
-//            if(con1 == null) {
-//                con1 = ManipDb.pgConnect("postgres","railway","9EHRLZ2xGeZ0Vu7ZMuAn");;
-//            }
             return new ResponseEntity<List<HistoriqueOffre>>(new HistoriqueOffreDao().ListeOffre(con1,idEnchere), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-//        finally { con1.close(); }
+        finally { if(con1 != null) con1.close(); }
     }
 
 

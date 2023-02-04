@@ -22,21 +22,12 @@ import java.sql.Connection;
 public class UtilisateurRestController {
 
     UtilisateurDao ud = new UtilisateurDao();
-    Connection con;
-    {
-        try {
-            con = ManipDb.pgConnect("postgres","railway","xdUc1BXEMu9U6UjW8VmL");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-    Connexion con1 = new Connexion();
 
     @PostMapping("/Inscription")
     public Response traitementInscription(@RequestParam("nom") String nom, @RequestParam("prenom") String prenom, @RequestParam("email") String email, @RequestParam("mdp") String mdp)
     {
         Response response = new Response();
-//        con1.Resolve();
+        Connexion con1 = new Connexion();
         try{
             ud.Inscription(con1,nom,prenom,email,mdp);
             response.setStatus("200");
@@ -47,7 +38,7 @@ public class UtilisateurRestController {
             response.setStatus("400");
             response.setMessage("Inscripiton impossible");
         }
-//        con1.CloseSC();
+        con1.Close();
         return response;
     }
 
@@ -77,7 +68,7 @@ public class UtilisateurRestController {
         Response response = new Response();
         TokenUserDao tud = new TokenUserDao();
         TokenUser tu;
-//        con1.Resolve();
+        Connexion con1 = new Connexion();
         try {
                     if(tud.validTokenUser(token)!=0)
                     {
@@ -93,7 +84,7 @@ public class UtilisateurRestController {
             throw new RuntimeException(e);
         }
         finally {
-//            con1.CloseSC();
+            con1.Close();
             return response;
         }
     }
@@ -102,14 +93,18 @@ public class UtilisateurRestController {
     public float getCompteUser(@RequestHeader("token") String token) throws Exception {
         TokenUserDao tud = new TokenUserDao();
         TokenUser tu;
+        Connexion con1 = new Connexion();
+        float result = 0.0f;
         if(tud.validTokenUser(token)!=0)
         {
             tu = tud.getTokenUser(token);
-            return ud.getCompteUser(tu.getIdUtilisateur(),con1);
+            result = ud.getCompteUser(tu.getIdUtilisateur(),con1);
         }
         else {
-            return 0.0f;
+            result = 0.0f;
         }
+        con1.Close();
+        return result;
     }
 
 

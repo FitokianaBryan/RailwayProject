@@ -20,21 +20,13 @@ import java.util.List;
 @RequestMapping("/api/historique")
 @CrossOrigin
 public class HistoriqueRestController {
-    Connexion con = new Connexion();
-    Connection con1;
-    {
-        try {
-            con1 = ManipDb.pgConnect("postgres","railway","xdUc1BXEMu9U6UjW8VmL");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+
     @GetMapping("HistoriqueEncherisseur")
     public ResponseEntity<List<Object[]>> HistoriqueEncherisseur(@RequestHeader("token") String token)
     {
         TokenUserDao tud = new TokenUserDao();
         TokenUser tu;
-//        con.Resolve();
+        Connexion con = new Connexion();
          try {
              if(tud.validTokenUser(token)!=0)
              {
@@ -49,7 +41,7 @@ public class HistoriqueRestController {
          {
              return new ResponseEntity<>(HttpStatus.NOT_FOUND);
          }
-//         finally { con.CloseRC(); }
+         finally { con.Close(); }
     }
 
     @GetMapping("HistoriqueVente")
@@ -57,7 +49,7 @@ public class HistoriqueRestController {
     {
         TokenUserDao tud = new TokenUserDao();
         TokenUser tu;
-//        con.Resolve();
+        Connexion con = new Connexion();
         try {
             if(tud.validTokenUser(token)!=0)
             {
@@ -72,37 +64,35 @@ public class HistoriqueRestController {
         {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-//        finally { con.CloseRC(); }
+        finally { con.Close(); }
     }
 
     @GetMapping("ResultatEnchere")
     public ResponseEntity<List<ResultatEnchere>> HistoriqueVente(@RequestParam("idEnchere") int idEnchere) throws Exception
     {
+        Connection con1 = ManipDb.pgConnect("postgres","railway","xdUc1BXEMu9U6UjW8VmL");
         try {
-            if(con1 == null) {
-                con1 = ManipDb.pgConnect("postgres","railway","9EHRLZ2xGeZ0Vu7ZMuAn");
-            }
                 return new ResponseEntity<List<ResultatEnchere>>(new HistoriqueOffreDao().userGagnant(con1,idEnchere), HttpStatus.OK);
         }
         catch(Exception e)
         {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-//        finally { con1.close(); }
+        finally { if(con1 != null) con1.close(); }
     }
 
     @GetMapping("ResultatEnchere/{idEnchere}")
     public ResponseEntity<List<Object[]>> ResultatEnchere(@PathVariable("idEnchere") int idEnchere)
     {
+        Connexion con = new Connexion();
         try {
-//            con.Resolve();
             return new ResponseEntity<List<Object[]>>(new HistoriqueOffreDao().userGagnantView(con,idEnchere), HttpStatus.OK);
         }
         catch(Exception e)
         {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-//        finally { con.CloseRC(); }
+        finally { con.Close(); }
     }
 
 }

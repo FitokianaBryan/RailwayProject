@@ -77,7 +77,7 @@ public class TokenUserDao {
         con.getResultset().next();
         int result = res.getInt(1);
         System.out.println("la requete est" + requete);
-//        con.CloseRC();
+        con.Close();
         return result;
     }
 
@@ -102,7 +102,7 @@ public class TokenUserDao {
              {
                 return null;
              }
-//             finally { con.Close(); }
+             finally { con.Close(); }
 
     }
 
